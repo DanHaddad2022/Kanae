@@ -53,15 +53,15 @@ function criaPeca(cor) {
 }
 
 function permDrop(evento){
-    evento.preventDefault() // Não vai fazer o normal
+    evento.preventDefault()
     const imagem = document.querySelector(`#${imgid}`)
     const col_ori = imagem.parentElement.dataset.col 
     const lin_ori = imagem.parentElement.dataset.lin
     const lin_des = evento.target.dataset.lin 
     const col_des = evento.target.dataset.col
-    if ((imagem.getAttribute('src') == 'img/red.png' && 
+    if ((imagem.getAttribute('src') == 'red.png' && 
     lin_des == lin_ori-1 || 
-    imagem.getAttribute('src') == 'img/black.png' && 
+    imagem.getAttribute('src') == 'black.png' && 
     lin_des-1 == lin_ori) &&
     (col_ori == col_des-1 || col_ori-1 == col_des)) {
         evento.target.addEventListener('drop', drop)
