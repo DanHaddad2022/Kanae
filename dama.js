@@ -90,4 +90,4 @@ function drop(){
 dragstart();
 dragend();
 dragover();
-drop()z
+drop()
