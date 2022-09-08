@@ -1,99 +1,87 @@
-const tamanhoCelula = 60;
-let pecaId = 0;
-let localAtual = 80;
-let localFuturo = 81;
-let classe = '';
-document.body.append(criaTabuleiro());
+const tamanhoCelula = 40
+let pecaId = 0
+let imgid 
+document.body.append(criaTabuleiro())
 
 function criaTabuleiro() {
-    const tamanho = 8;
-    let tabela = document.createElement('table');
+    const tamanho = 8
+    const tabela = document.createElement('table')
 
-    tabela.style.borderStyle = 'solid';
-    tabela.style.borderSpacing = 0;
-    tabela.style.margin = 'auto';
+    tabela.style.borderStyle = 'solid'
+    tabela.style.borderSpacing = 0
+    tabela.style.margin = 'auto'
 
     for (let i = 0; i < tamanho; i++) {
-        let linha = document.createElement('tr');
+        const linha = document.createElement('tr')
         tabela.append(linha);
         for (let j = 0; j < tamanho; j++) {
-            let celula = document.createElement('td');
-			celula.setAttribute('id',i + 99);
-            linha.append(celula);
-            celula.style.width = `${tamanhoCelula}px`;
-            celula.style.height = `${tamanhoCelula}px`;
-			pecaId += 1;
+            const celula = document.createElement('td')
+            celula.dataset.lin = i
+            celula.dataset.col = j
+            linha.append(celula)
+            celula.style.width = `${tamanhoCelula}px`
+            celula.style.height = `${tamanhoCelula}px`
             if (i % 2 == j % 2) {
-                celula.style.backgroundColor = 'black';
-				celula.setAttribute("class","droptarget");
+                celula.addEventListener('dragover', permDrop)
+                celula.style.backgroundColor = 'black'
                 if (i * 8 + j <= 24) {
-                    celula.append(criaPeca('black',pecaId));
+                    const peca = criaPeca('black')
+                    peca.setAttribute('draggable','false')
+                    celula.append(peca)
+                    celula.removeEventListener('dragover', permDrop)
                 } else if (i * 8 + j >= 40) {
-                    celula.append(criaPeca('red',pecaId));
+                    celula.append(criaPeca('red'))
+                    celula.removeEventListener('dragover', permDrop)
                 }
             } else {
-                celula.style.backgroundColor = 'white';
+                celula.style.backgroundColor = 'white'
             }
         }
     };
-	
-    return tabela;	
+    return tabela;
 }
 
-function criaPeca(cor,ide) {
-		let imagem = document.createElement('img');
-		imagem.setAttribute('src', `${cor}.png`);
-		imagem.setAttribute('width', `${tamanhoCelula-4}px`);
-		imagem.setAttribute('height', `${tamanhoCelula-4}px`);
-		imagem.setAttribute('draggable','true');
-		imagem.setAttribute('id', ide);
-		imagem.setAttribute('class', cor);
-		
-    return imagem;
+function criaPeca(cor) {
+    const imagem = document.createElement('img')
+    imagem.classList.add('peca') 
+    imagem.id = `p${pecaId++}`
+    imagem.setAttribute('src', `img/${cor}.png`)
+    imagem.setAttribute('width', `${tamanhoCelula-4}px`)
+    imagem.setAttribute('height', `${tamanhoCelula-4}px`)
+    imagem.addEventListener('drag', drag)
+    return imagem
 }
 
-function dragstart(){
-	document.addEventListener("dragstart", function(event) {
-	  event.dataTransfer.setData("Text", event.target.id);
-	  localAtual = event.path[1].id;
-	  classe = (event.path[0].className);
-	});
-}
-
-function dragend() {
-	document.addEventListener("dragend", function(event) {
-	});
-}
-
-function dragover() {
-	document.addEventListener("dragover", function(event) {
-	  event.preventDefault();
-	});
-}
-
-function drop(){
-	document.addEventListener("drop", function(event) {
-	event.preventDefault();
-	if ( event.target.className == "droptarget") {
-		const data = event.dataTransfer.getData("Text");
-		let c = event.path[0];
-		let t = c.childElementCount;
-		localFuturo = event.target.id;
-		if(t == '0' && localAtual != localFuturo){
-			if(classe == 'red' && localAtual > localFuturo && localAtual - localFuturo == 1|| classe == 'black' && localAtual < localFuturo && localFuturo - localAtual == 1) {
-				event.target.appendChild(document.getElementById(data));
-			}
-		}
-	}
-function trocaJog() {
-        const pecas = document.querySelectorAll('.peca')
-        pecas.forEach(peca => {
-            peca.draggable = !peca.draggable
-        })
+function permDrop(evento){
+    evento.preventDefault() // Não vai fazer o normal
+    const imagem = document.querySelector(`#${imgid}`)
+    const col_ori = imagem.parentElement.dataset.col 
+    const lin_ori = imagem.parentElement.dataset.lin
+    const lin_des = evento.target.dataset.lin 
+    const col_des = evento.target.dataset.col
+    if ((imagem.getAttribute('src') == 'img/red.png' && 
+    lin_des == lin_ori-1 || 
+    imagem.getAttribute('src') == 'img/black.png' && 
+    lin_des-1 == lin_ori) &&
+    (col_ori == col_des-1 || col_ori-1 == col_des)) {
+        evento.target.addEventListener('drop', drop)
     }
-	});
 }
-dragstart();
-dragend();
-dragover();
-drop()
+
+function drag(evento) {
+    imgid = evento.target.id
+}
+
+function trocaJog() {
+    const pecas = document.querySelectorAll('.peca')
+    pecas.forEach(peca => {
+        peca.draggable = !peca.draggable
+    })
+}
+function drop(evento) {
+    const imagem = document.querySelector(`#${imgid}`)
+    imagem.parentElement.addEventListener('dragover', permDrop)
+    evento.target.appendChild(imagem)
+    imagem.parentElement.removeEventListener('dragover', permDrop)
+    trocaJog()
+}
