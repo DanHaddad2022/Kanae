@@ -85,6 +85,12 @@ function drop(){
 			}
 		}
 	}
+function trocaJog() {
+        const pecas = document.querySelectorAll('.peca')
+        pecas.forEach(peca => {
+            peca.draggable = !peca.draggable
+        })
+    }
 	});
 }
 dragstart();
