@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tarefa</title>
+    <style id="estilo">
+        .tarefaConcluida {
+            display: none;
+
+        }
+    </style>
+</head>
+<body>
+    <h1>lista de tarefas</h1>
+    <form action="">
+        <input type="text" name="tarefa" placeholder="digite algo">
+        <input type="submit" value="inserir">
+    </form>
+    <button id="mostra">mostrar tudo</button>
+    <div id="lista"></div>
+    <script>
+        const btn = document.querySelector('#mostra')
+        btn.addEventListener('click', evento =>{
+            const estilo = document.querySelector('#estilo')
+            estilo.disabled = !estilo.disabled
+            if (estilo.disabled) {
+                evento.target.textContent = 'ocultar tudo'
+            }
+            else {
+                evento.target.textContent = 'mostar tudo'
+            }
+        })
+    </script>
+    <script>
+        const formulário = document.querySelector("form")
+        formulário.addEventListener('submit', insereTarefa)
+
+        function insereTarefa(evento) {
+            evento.preventDefault()
+            const texto = getTextoInput(evento.target)
+            if (texto == "") return
+            const lista = document.querySelector('#lista')
+            const tarefa = novatarefa(texto)
+            lista.append(tarefa)
+        }
+        function getTextoInput(formulário) {
+            const input = formulário.querySelector("input[type=text]")
+            const texto = input.value
+            input.value = ""
+            input.focus()
+            return texto
+        }
+        function novatarefa(texto) {
+            const tarefa = document.createElement('p')
+            tarefa.append(criacheckbox())
+            tarefa.append(texto)
+            return tarefa
+        }
+        function criacheckbox() {
+            const checkbox = document.createElement('input')
+            checkbox.setAttribute("type", "checkbox")
+            checkbox.addEventListener('click', riscaTarefa)
+            return checkbox
+        }
+        function riscaTarefa(evento) {
+            const tarefa = evento.target.parentElement
+            if(evento.target.checked) {
+                tarefa.style.textDecoration = "line-through"
+                tarefa.classList.add("tarefaConcluida")
+            }
+            else {
+                tarefa.style.textDecoration = "none"
+                tarefa.classList.remove("tarefaConcluida")
+            }
+        }
+    </script>
+</body>
+</html>
