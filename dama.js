@@ -119,26 +119,6 @@ function drop(){
 	}
 	});
 }
-function pecaRainha(classe, yf, xf){
-	local = xf + '-' + yf;
-	sub = document.getElementById(local);
-	pe = sub.firstElementChild;
-	addId = pe.id;
-	addClass = pe.className;
-	let imagem = document.createElement('img');
-	if (classe == "red") {
-		imagem.setAttribute('src', 'img/redKing.jpeg');
-	} else {
-		imagem.setAttribute('src', 'img/blackKing.jpeg');
-	}
-	imagem.setAttribute('width', `${tamanhoCelula-4}px`);
-	imagem.setAttribute('height', `${tamanhoCelula-4}px`);
-	imagem.setAttribute('draggable','true');
-	imagem.setAttribute('id', addId);
-	imagem.setAttribute('class', `${addClass}King`);
-	pe.remove();
-	sub.append(imagem);
-}
 dragstart();
 dragend();
 dragover();
