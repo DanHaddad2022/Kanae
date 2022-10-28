@@ -2,7 +2,6 @@ const tamanhoCelula = 60;
 let pecaId = 0;
 let localAtual = 80;
 let localFuturo = 81;
-let classe ='';
 let localCaptura = '';
 let jogada = 0;
 document.body.append(criaTabuleiro());
